@@ -17,8 +17,8 @@ RUN add-apt-repository \
    $(lsb_release -cs) \
    stable"
 RUN apt-get update  -qq \
-    && apt-get install docker-ce=17.12.1~ce-0~debian python-pip -y
-RUN pip install ansible==2.5
+    && apt-get install docker-ce=17.12.1~ce-0~debian python-pip sshpass -y
+RUN pip install ansible==2.5 && pip install --force-reinstall cryptography==2.7
 
 COPY rootfs /
 RUN ln -sf /install-plugins.sh /usr/local/bin/install-plugins.sh

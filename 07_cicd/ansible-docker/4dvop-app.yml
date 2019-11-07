@@ -6,14 +6,18 @@
     - name: Deploy 4dvop-nginx 
       docker_container:
         name: nginx
+        hostname: nginx
         image: dirane/4dvop-nginx
         state: started
         ports:
           - "8080:8080"
     - name: Deploy 4dvop-haproxy
       docker_container:
-        name: nginx
+        name: haproxy
+        hostname: haproxy 
         image: dirane/4dvop-haproxy
         state: started
+        links:  
+          - nginx:nginx
         ports:
           - "80:80"

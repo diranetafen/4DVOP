@@ -1,3 +1,5 @@
 app_vm ansible_host=192.168.146.176
 [all:vars]
 ansible_user=centos
+ansible_ssh_pass=centos
+ansible_sudo_pass=centos
