@@ -1,0 +1,19 @@
+---
+
+- hosts: app_vm
+  become: true
+  tasks:
+    - name: Deploy 4dvop-nginx 
+      docker_container:
+        name: nginx
+        image: dirane/4dvop-nginx
+        state: started
+        ports:
+          - "8080:8080"
+    - name: Deploy 4dvop-haproxy
+      docker_container:
+        name: nginx
+        image: dirane/4dvop-haproxy
+        state: started
+        ports:
+          - "80:80"
