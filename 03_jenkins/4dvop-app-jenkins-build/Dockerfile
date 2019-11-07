@@ -31,6 +31,39 @@ ENV BITNAMI_APP_NAME="jenkins" \
     JENKINS_USERNAME="user" \
     PATH="/opt/bitnami/java/bin:/opt/bitnami/git/bin:$PATH"
 
+# install go
+RUN apt-get install wget \
+  && wget https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz \
+  && tar -xvf go1.13.3.linux-amd64.tar.gz \
+  && mv go /usr/local \
+  && rm go1.13.3.linux-amd64.tar.gz
+
+ENV GOROOT /usr/local/go
+ENV GOPATH $HOME/go 
+ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
+
+# install dep
+RUN go get github.com/golang/dep \
+  && cd $GOPATH/src/github.com/golang/dep \
+  && go install ./...
+
+# install clair
+RUN cd $GOPATH/src/ \
+  && git clone https://github.com/arminc/clair-scanner.git \
+  && cd clair-scanner/ \
+  && make ensure && make build
+
+ENV CLAIR_SCANNER $GOPATH/src/clair-scanner
+ENV PATH $CLAIR_SCANNER:$PATH
+
+# Install git secret
+RUN git clone https://github.com/awslabs/git-secrets.git \
+    && cd git-secrets \
+    && make install \
+    && cp git-secrets /usr/local/bin/ \
+    && cd .. \
+    && rm -Rf git-secrets
+
 EXPOSE 8080 8443 50000
 
 ENTRYPOINT [ "/app-entrypoint.sh" ]
